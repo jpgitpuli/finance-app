@@ -170,14 +170,25 @@
       const expensesValue = document.getElementById("expenses");
       const balanceValue = document.getElementById("balance");
       const formError = document.getElementById("form-error");
+      let fallbackIdCounter = 0;
 
       const formatCurrency = (value) =>
         new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
 
-      const createId = () =>
-        typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
-          ? crypto.randomUUID()
-          : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const createId = () => {
+        if (typeof crypto !== "undefined") {
+          if (typeof crypto.randomUUID === "function") {
+            return crypto.randomUUID();
+          }
+          if (typeof crypto.getRandomValues === "function") {
+            const values = new Uint32Array(2);
+            crypto.getRandomValues(values);
+            return `${values[0]}-${values[1]}-${Date.now()}`;
+          }
+        }
+        fallbackIdCounter += 1;
+        return `${Date.now()}-${fallbackIdCounter}`;
+      };
 
       const loadTransactions = () => {
         try {
@@ -215,6 +226,7 @@
 
             remove.type = "button";
             remove.textContent = "Remove";
+            remove.setAttribute("aria-label", `Remove ${entry.description}`);
             remove.addEventListener("click", () => {
               transactions = transactions.filter((candidate) => candidate.id !== entry.id);
               saveTransactions();
