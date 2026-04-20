@@ -14,4 +14,4 @@ A simple browser-based finance tracker for recording income and expenses.
 
 ## Run
 
-Open `/home/runner/work/finance-app/finance-app/index.html` in a browser.
+Open `index.html` in a browser.
