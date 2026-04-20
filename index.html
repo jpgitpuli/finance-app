@@ -195,6 +195,7 @@
           const raw = localStorage.getItem(STORAGE_KEY);
           return raw ? JSON.parse(raw) : [];
         } catch {
+          console.warn("Unable to load saved transactions from localStorage.");
           return [];
         }
       };
@@ -287,7 +288,6 @@
         saveTransactions();
         render();
         form.reset();
-        typeInput.value = "income";
         descriptionInput.focus();
       });
 
