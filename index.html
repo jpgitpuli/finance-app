@@ -203,7 +203,11 @@
       let transactions = loadTransactions();
 
       const saveTransactions = () => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+        } catch {
+          console.warn("Unable to save transactions to localStorage.");
+        }
       };
 
       const render = () => {
