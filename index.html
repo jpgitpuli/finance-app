@@ -84,6 +84,12 @@
         padding: 10px 0;
       }
 
+      .transaction-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
       .amount-income {
         color: #0b8f43;
       }
@@ -94,6 +100,12 @@
 
       .empty {
         color: #66738f;
+      }
+
+      .form-error {
+        margin: 0 0 12px;
+        color: #bc1622;
+        font-size: 14px;
       }
 
       @media (max-width: 700px) {
@@ -119,6 +131,7 @@
         </select>
         <button type="submit">Add</button>
       </form>
+      <p id="form-error" class="form-error" hidden></p>
 
       <section class="summary">
         <div class="card">
@@ -148,9 +161,15 @@
       const incomeValue = document.getElementById("income");
       const expensesValue = document.getElementById("expenses");
       const balanceValue = document.getElementById("balance");
+      const formError = document.getElementById("form-error");
 
       const formatCurrency = (value) =>
         new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+
+      const createId = () =>
+        typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
       const loadTransactions = () => {
         try {
@@ -195,9 +214,7 @@
             });
 
             const right = document.createElement("div");
-            right.style.display = "flex";
-            right.style.alignItems = "center";
-            right.style.gap = "10px";
+            right.className = "transaction-actions";
             right.appendChild(amount);
             right.appendChild(remove);
 
@@ -232,11 +249,15 @@
         const type = typeInput.value;
 
         if (!description || !Number.isFinite(amount) || amount <= 0 || (type !== "income" && type !== "expense")) {
+          formError.textContent = "Please enter a description, valid amount, and transaction type.";
+          formError.hidden = false;
           return;
         }
 
+        formError.textContent = "";
+        formError.hidden = true;
         transactions.push({
-          id: crypto.randomUUID(),
+          id: createId(),
           description,
           amount,
           type,
