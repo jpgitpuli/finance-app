@@ -123,13 +123,21 @@
     <main class="container">
       <h1>Finance App</h1>
       <form id="transaction-form">
-        <input id="description" type="text" placeholder="Description" required />
-        <input id="amount" type="number" step="0.01" min="0.01" placeholder="Amount" required />
-        <select id="type" required>
+        <input id="description" type="text" placeholder="Description" aria-label="Transaction description" required />
+        <input
+          id="amount"
+          type="number"
+          step="0.01"
+          min="0.01"
+          placeholder="Amount"
+          aria-label="Transaction amount"
+          required
+        />
+        <select id="type" aria-label="Transaction type" required>
           <option value="income">Income</option>
           <option value="expense">Expense</option>
         </select>
-        <button type="submit">Add</button>
+        <button type="submit" aria-label="Add transaction">Add</button>
       </form>
       <p id="form-error" class="form-error" hidden></p>
 
